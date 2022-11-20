@@ -14,7 +14,9 @@ class Card:
 
     def print(self):
         print(self.name + " " + str(self.power));
-        
+
 
 testCard = Card("name", "super", "type", "sub", 3, 4, "blue", 7, "asdhf uh", "f jajsdifj ", "idk.com");
 testCard.print();
+
+test2 = Card("nam", "super", "type", "sub", 3, 4, "blue", 7, "asdhf uh", "f jajsdifj ", "idk.com");
