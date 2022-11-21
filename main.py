@@ -1,11 +1,11 @@
 import os
 
 class Card:
-    def __init__(self, name, super, type, sub, power, tough, color, cmc, text, rarity, url):
+    def __init__(self, name, cmc, color, typ, supTyp, subTyp, rarity, text, power, tough, url):
         self.name = name;
-        self.super = super;
-        self.type = type;
-        self.sub = sub;
+        self.supTyp = supTyp;
+        self.typ = typ;
+        self.subTyp = subTyp;
         self.power = power;
         self.tough = tough;
         self.color = color;
@@ -15,16 +15,19 @@ class Card:
         self.url = url;
 
     def print(self):
-        print(self.name + " " + str(self.power));
+        print(self.name + " | " + self.typ + " | P/T = " + str(self.power) + str(self.tough))
+    
 
 
-file = open("cardspipe.txt", "r");
+file = open("cardspipe.txt",encoding="utf-8");
 count = 0
+lineCount = 0;
 cards = []
 for line in file:
+    lineCount += 1
     #temp will always have newest line
     temp = []
-    temp += (line.split("|"))
+    temp += (line.split("@"))
 
     #If true (cards size is zero), new card is being added
     if(cards.__len__() == 0):
@@ -56,7 +59,6 @@ for line in file:
     power = cards[8]
     tough = cards[9]
     url = cards[10]
-    print(cards)
 
     if (url == ""):
         cards.clear()
@@ -100,9 +102,13 @@ for line in file:
     # subTyp = temp
 
     card = Card(name, cmc, color, typ, supTyp, subTyp, rarity, text, power, tough, url)
+    card.print()
     print("")
     count += 1
     cards.clear()
+
+    if(name == "Interplanar Brushwagg"): #USE FOR DEBUGGING
+        print(lineCount) #PUT BREAKPOINT TO SEE WHAT LINE THE ERROR OCCURS
 
 print("Cards added: " + str(count))
 
