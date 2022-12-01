@@ -2,27 +2,228 @@ import os
 
 class Card:
     def __init__(self, name, cmc, color, typ, supTyp, subTyp, rarity, text, power, tough, url):
-        self.name = name;
-        self.supTyp = supTyp;
-        self.typ = typ;
-        self.subTyp = subTyp;
-        self.power = power;
-        self.tough = tough;
-        self.color = color;
-        self.cmc = cmc;
-        self.text = text;
-        self.rarity = rarity;
-        self.url = url;
+        self.name = name
+        self.supTyp = supTyp
+        self.typ = typ
+        self.subTyp = subTyp
+        self.power = power
+        self.tough = tough
+        self.color = color
+        self.cmc = cmc
+        self.text = text
+        self.rarity = rarity
+        self.url = url
 
-    def print(self):
-        print(self.name + " | " + self.typ + " | P/T = " + str(self.power) + str(self.tough))
+    def printCard(self):
+        print(self.name + " | " + self.typ + " | P/T = " + str(self.power) + " " + str(self.tough))
     
+def printArray(array):
+    for i in array:
+        print(i.name + " | " + i.typ + " | P/T = " + str(i.power) + " " + str(i.tough))
 
+def printPower(array):
+    for i in array:
+        print(str(i.power))
+
+def printTough(array):
+    for i in array:
+        print(str(i.tough))
+
+def printCMC(array):
+    for i in array:
+        print(str(i.cmc))
+
+#Used in quicksort to find partition position
+def partition(array, low, high, str):
+    if(str == "power"):
+        pivot = int(array[low].power) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].power) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].power) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+    elif(str == "tough"):
+        pivot = int(array[low].tough) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].tough) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].tough) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+    elif(str == "cmc"):
+        pivot = int(array[low].cmc) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].cmc) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].cmc) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+
+
+def quickSort(array, low, high, str):
+    if(low < high):
+        pivot = partition(array, low, high, str)
+        quickSort(array, low, pivot - 1, str)
+        quickSort(array, pivot + 1, high, str)
+    
+def mergeSort(cards, str):
+    if (len(cards) > 1):
+        #split the list in half
+        middle = len(cards)//2
+        left = cards[:middle]
+        right = cards[middle:]
+
+        #recursively call
+        mergeSort(left, str)
+        mergeSort(right, str)
+
+        i = 0
+        j = 0
+        k = 0
+
+        # check what sorting factor
+        if (str == "power"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].power).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].power).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].power) <= int(right[j].power)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+        elif (str == "tough"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].tough).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].tough).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].tough) <= int(right[j].tough)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+        elif (str == "cmc"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].cmc).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].cmc).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].cmc) <= int(right[j].cmc)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+#***************************START OF MAIN************************************
 
 file = open("cardspipe.txt",encoding="utf-8");
 count = 0
 lineCount = 0;
-cards = []
+cards = [] #Stores each variable needed to make a new card object, gets reset afterwards
+
+allCards = [] #this will hold every card, will NOT change throughout course of program (after reading in completes)
+allCreatures = []
 for line in file:
     lineCount += 1
     #temp will always have newest line
@@ -42,7 +243,6 @@ for line in file:
     # print(cards.__len__()) #USED FOR TESTING
 
     if(cards.__len__() != 11):
-
         continue
         # moreCards = file.readline.split("|")
         # cards += moreCards 
@@ -60,56 +260,67 @@ for line in file:
     tough = cards[9]
     url = cards[10]
 
-    if (url == ""):
+    #if no URL, the card is a duplicate
+    if (url == "" or url == "\n"):
         cards.clear()
         continue
     
-    # temp = ""
+    temp = ""
 
-    # if (typ.__contains__("Artifact")):
-    #     temp += "artifact "
+    #In order to prevent typ from storing redundant info, such as "creature - Human Soldier" -> "creature"
+    if (typ.__contains__("Artifact")):
+        temp += "artifact "
 
-    # if (typ.__contains__("Creature")):
-    #     temp += "creature "
+    if (typ.__contains__("Creature")):
+        temp += "creature "
 
-    # if (typ.__contains__("Enchantment")) :
-    #     temp += "enchantment "
+    if (typ.__contains__("Enchantment")) :
+        temp += "enchantment "
 
-    # if (typ.__contains__("Instant")) :
-    #     temp += "instant "
+    if (typ.__contains__("Instant")) :
+        temp += "instant "
 
-    # if (typ.__contains__("Land")) :
-    #     temp += "land "
+    if (typ.__contains__("Land")) :
+        temp += "land "
 
-    # if (typ.__contains__("Sorcery")) :
-    #     temp += "sorcery "
+    if (typ.__contains__("Sorcery")) :
+        temp += "sorcery "
 
-    # typ = temp
-    # temp = ""
+    typ = temp
 
-    # if(supTyp.contains("Legendary")):
-    #     temp += "legendary "
-
-    # if(supTyp.contains("Basic")):
-    #     temp += "basic "
-
-    # if(supTyp.contains("Snow")):
-    #     temp += "snow "
-
-    # if(supTyp.contains("World")):
-    #     temp += "world "
-
-    # subTyp = temp
-
+    #Create card object
     card = Card(name, cmc, color, typ, supTyp, subTyp, rarity, text, power, tough, url)
-    card.print()
-    print("")
+
+    #Add card to array
+    allCards.append(card)
+    # allCards[count].print()
+    # print("")
+
+    #if card type is creature, add to creature array
+    if(typ.__contains__("creature") and power.isnumeric() and tough.isnumeric()):
+        allCreatures.append(card)
+
     count += 1
     cards.clear()
 
-    if(name == "Interplanar Brushwagg"): #USE FOR DEBUGGING
-        print(lineCount) #PUT BREAKPOINT TO SEE WHAT LINE THE ERROR OCCURS
+    # if(name == "Interplanar Brushwagg"): #USE FOR DEBUGGING
+    #     print(lineCount) #PUT BREAKPOINT TO SEE WHAT LINE THE ERROR OCCURS
 
-print("Cards added: " + str(count))
+print("Total Cards Added: " + str(allCards.__len__()))
+print("Size of Creature array: " + str(allCreatures.__len__()))
 
-    
+#***************************************END OF FILE READ IN*******************************
+
+printArray(allCreatures)
+quickSort(allCreatures, 0, allCreatures.__len__()-1, "cmc")
+
+print("")
+print("***************AFTER QUICK SORTING***********************")
+print("")
+printCMC(allCreatures)
+
+mergeSort(allCreatures, "power")
+print("")
+print("***************AFTER MERGE SORTING***********************")
+print("")
+printPower(allCreatures)
