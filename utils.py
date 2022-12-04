@@ -145,22 +145,6 @@ sys.setrecursionlimit(100000)
 print(sys.getrecursionlimit())
 
 
-print('s')
-# quickSort(allCreatures, 0, allCreatures.__len__()-1, "cmc")
-print('q')
-print("")
-print("***************AFTER QUICK SORTING***********************")
-print("")
-# printCMC(allCreatures)
-print('l')
-
-search_options = ["name", "cmc", "color", "typ", "supTyp", "subTyp", "rarity", "text", "power", "tough"]
-# mergeSort(allCreatures, "power")
-print("")
-print("***************AFTER MERGE SORTING***********************")
-print("")
-# printPower(allCreatures)
-
 def get_noncreature_types(all_cards):
     from tqdm import tqdm
     # creature = allCreatures[0]
@@ -187,5 +171,391 @@ def get_creature_types(all_creatures):
 
 creatureSubtypes = get_creature_types(allCreatures)
 allSubtypes = get_noncreature_types(allCards)
-print(allSubtypes - creatureSubtypes)
+
+"""
+SORT FUNCTIONS
+"""
+
+def partition(array, low, high, str):
+    if(str == "power"):
+        pivot = int(array[low].power) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].power) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].power) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+    elif(str == "tough"):
+        pivot = int(array[low].tough) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].tough) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].tough) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+    elif(str == "cmc"):
+        pivot = int(array[low].cmc) #pivot starts at leftmost position
+        up = low
+        down = high
+
+        #while up index is to the left of down index
+        while(up < down):
+            for j in range(up, high):
+                if(int(array[up].cmc) > pivot):
+                    break
+                up += 1
+            
+            for j in range(high, low, -1):
+                if(int(array[down].cmc) < pivot):
+                    break
+                down -= 1
+            
+            if(up < down):
+                temp = array[up]
+                array[up] = array[down]
+                array[down] = temp
+        temp = array[low]
+        array[low] = array[down]
+        array[down] = temp
+        return down
+
+def quickSort(array, low, high, str):
+    if(low < high):
+        pivot = partition(array, low, high, str)
+        quickSort(array, low, pivot - 1, str)
+        quickSort(array, pivot + 1, high, str)
+    
+def mergeSort(cards, str):
+    if (len(cards) > 1):
+        #split the list in half
+        middle = len(cards)//2
+        left = cards[:middle]
+        right = cards[middle:]
+
+        #recursively call
+        mergeSort(left, str)
+        mergeSort(right, str)
+
+        i = 0
+        j = 0
+        k = 0
+
+        # check what sorting factor
+        if (str == "power"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].power).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].power).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].power) <= int(right[j].power)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+        elif (str == "tough"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].tough).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].tough).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].tough) <= int(right[j].tough)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+        elif (str == "cmc"):
+            while i < len(left) and j < len(right):
+                if (not (left[i].cmc).isnumeric()):
+                    del left[i]
+                    continue
+                if (not (right[j].cmc).isnumeric()):
+                    del right[j]
+                    continue
+                if (int(left[i].cmc) <= int(right[j].cmc)):
+                    cards[k] = left[i]
+                    i += 1
+                else:
+                    cards[k] = right[j]
+                    j += 1
+                
+                k+= 1
+
+            while j < len(right):
+                cards[k] = right[j]
+                j += 1
+                k += 1
+
+            while i < len(left):
+                cards[k] = left[i]
+                i += 1
+                k += 1
+
+
+"""
+SEARCH FUNCTIONS
+"""
+def searchCMC(array, min, max, sortType):
+    if(sortType == "quick"):
+        quickSort(array, 0, allCreatures.__len__()-1, "cmc")
+    else:
+        mergeSort(array, "cmc")
+    
+    index = 0
+    #first, delete all powers that are too small
+    while int(array[index].cmc) < min:
+        del array[index]
+    #find the last index of the max power allowed
+    while int(array[index].cmc) <= max:
+        index += 1
+    del array[index:] #should delete all indices after index, inclusive
+
+def searchSupType(array, supArr):
+    index = 0
+    count = 0
+    size = array.__len__()
+    deleted = False
+
+    while count != size:
+
+        for i in supArr:
+            if i.lower() not in array[index].supTyp.lower():
+                del array[index]
+                deleted = True
+                break
+
+        if(not deleted):
+            index += 1
+        deleted = False
+        count += 1
+
+
+def searchType(array, typeArr):
+    index = 0
+    count = 0
+    size = array.__len__()
+    deleted = False
+
+    while count != size:
+
+        for i in typeArr:
+            if i.lower() not in array[index].typ.lower():
+                del array[index]
+                deleted = True
+                break
+
+        if(not deleted):
+            index += 1
+        deleted = False
+        count += 1
+
+#subArr is list of strings containing desired subtypes (ie "human", "soldier", etc)
+def searchSubType(array, subArr):
+    index = 0
+    count = 0
+    size = array.__len__()
+    deleted = False
+
+    while count != size:
+
+        for i in subArr:
+            if i.lower() not in array[index].subTyp.lower():
+                del array[index]
+                deleted = True
+                break
+
+        if(not deleted):
+            index += 1
+        deleted = False
+        count += 1
+
+#pass array as reference, c is color  letter as string (ie "W", "R", "G", "U", "B")
+def searchColor(array, c):
+    index = 0
+    count = 0
+    size = array.__len__()
+
+    while count != size:
+        if c.lower() not in array[index].color.lower():
+            del array[index]
+        else:
+            index += 1
+        count += 1
+
+#rar is string containing rarity ("common", "uncommon", "rare", "mythic")
+def searchRarity(array, rar):
+    index = 0
+    count = 0
+    size = array.__len__()
+
+    while count != size:
+        if rar.lower() not in array[index].rarity.lower():
+            del array[index]
+        else:
+            index += 1
+        count += 1
+
+
+def searchName(array, name):
+    index = 0
+    count = 0
+    size = array.__len__()
+
+    while count != size:
+        if name.lower() not in array[index].name.lower():
+            del array[index]
+        else:
+            index += 1
+        count += 1
+#sorted array, txtArr is list of keywords to check for
+def searchText(array, txtArr):
+    index = 0
+    count = 0
+    size = array.__len__()
+    deleted = False
+
+    while count != size:
+
+        for i in txtArr:
+            if i.lower() not in array[index].text.lower():
+                del array[index]
+                deleted = True
+                break
+
+        if(not deleted):
+            index += 1
+        deleted = False
+        count += 1
+
+#THE ARRAY PASSED HERE SHOULD BE ALL CREATURES, NOT ALL CARDS
+#min = lowest val, max = highest val (inclusive)
+#sortType = "quick" for quicksort, or "merge" for merge sort
+def searchPower(array, min, max, sortType):
+    if(sortType == "quick"):
+        quickSort(array, 0, allCreatures.__len__()-1, "power")
+    else:
+        mergeSort(array, "power")
+    
+    index = 0
+    #first, delete all powers that are too small
+    while int(array[index].power) < min:
+        del array[index]
+    #find the last index of the max power allowed
+    while int(array[index].power) <= max:
+        index += 1
+    del array[index:] #should delete all indices after index, inclusive
+    
+#THE ARRAY PASSED HERE SHOULD BE ALL CREATURES, NOT ALL CARDS
+#min = lowest val, max = highest val (inclusive)
+#sortType = "quick" for quicksort, or "merge" for merge sort
+def searchTough(array, min, max, sortType):
+    if(sortType == "quick"):
+        quickSort(array, 0, allCreatures.__len__()-1, "tough")
+    else:
+        mergeSort(array, "tough")
+    
+    index = 0
+    #first, delete all powers that are too small
+    while int(array[index].tough) < min:
+        del array[index]
+    #find the last index of the max power allowed
+    while int(array[index].tough) <= max:
+        index += 1
+    del array[index:] #should delete all indices after index, inclusive
+        
+
+def search(unfiltered_cards, search_parameters):
+    
+    # ? example {'keywords_tag': [''], 'name_tag': 'fortnite', 'converted_mana_cost_tag': (0, 5),
+    # ? 'supertype_tag': ['World'], 'rarity_tag': ['Rare'], 'subtypes_tag': ['Human'], 
+    # ?'power_tag': (0, 5), 'toughness_tag': (0, 5)}
+    sort_type = search_parameters.pop("sort_type_tag")
+    # for parameter in search_parameters:
+    for parameter in search_parameters.keys():
+        value = search_parameters[parameter]
+        match parameter:
+            case "keywords_tag": # * keyword search
+                searchText(unfiltered_cards, value)
+            case "name_tag": # * name_tag search
+                print('name not made')
+            case "converted_mana_cost_tag": # * converted_mana_cost_tag search
+                searchCMC(unfiltered_cards, value[0], value[1],"merge")
+            case "supertype_tag": # * supertype_tag search
+                searchSupType(unfiltered_cards, value)
+            case "rarity_tag": # * rarity_tag search
+                searchRarity(unfiltered_cards, value)
+            case "subtypes_tag": # * subtypes_tag search
+                searchSubType(unfiltered_cards, value)
+            case "power_tag": # * power_tag search
+                searchPower(unfiltered_cards, value[0], value[1], sort_type)
+            case "toughness_tag": # * toughness_tag search
+                searchTough(unfiltered_cards, value[0], value[1], sort_type)
+        
+
+
 

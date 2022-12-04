@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from utils import get_creature_types, read_in_cards,get_noncreature_types, Card
+from utils import get_creature_types, read_in_cards,get_noncreature_types, Card, search
 import random
 ALL_CARDS, ALL_CREATURES = read_in_cards()
 
@@ -26,17 +26,14 @@ def make_grid(cols,rows):
             grid[i] = st.columns(rows)
     return grid
 
-
-keywords_tag = st.text_input("Please insert a comma separated list of keywords to search for", placeholder = r'Destroy, Flying,...')
+sort_type_tag = st.select_slider("Sort Type:", ["Quick", "Merge"])
+keywords_tag = st.text_input("Keywords: Please insert a comma separated list of keywords to search for", placeholder = r'Destroy, Flying,...')
 keywords_tag = [x.lower() for x in keywords_tag.replace(" ", "").split(",")] # Produces a lowercased list of keywords
 # st.write(keywords_tag)
-print(keywords_tag)
 name_tag = st.text_input("Card Name", placeholder =r'"Pacifism"')
 converted_mana_cost_tag  = st.slider('Select a Range for converted mana costs',   0, 16, (0, 5), 1)
 supertype_tag = st.multiselect("Choose Card Supertype", ["Basic", "Legendary", "Snow", "World"], ["World"])
 rarity_tag = st.multiselect("Choose Card Rarity", ["Common", "Uncommon", "Rare", "Mythic"], ["Rare"])
-make_grid(10,4)
-print(ALL_CREATURES[0].url)
 
 card_type = st.select_slider("Card Types:", ["Creature", "Noncreature"])
 if card_type == "Creature":
@@ -46,6 +43,23 @@ if card_type == "Creature":
 
 
 idx = 0 
+# * Collect search parameters and filter cards
+search_parameters = {
+    "sort_type_tag": sort_type_tag,
+    "keywords_tag": keywords_tag,
+    "name_tag": name_tag,
+    "converted_mana_cost_tag": converted_mana_cost_tag,
+    "supertype_tag": supertype_tag,
+    "rarity_tag": rarity_tag}
+
+if card_type == "Creature":
+    search_parameters["subtypes_tag"] = subtypes_tag
+    search_parameters["power_tag"] = power_tag
+    search_parameters["toughness_tag"] = toughness_tag
+
+
+FILTERED_CARDS = search(ALL_CARDS, search_parameters)
+
 FILTERED_CARDS = ALL_CARDS[:50]
 
 
