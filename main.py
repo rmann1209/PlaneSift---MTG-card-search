@@ -337,6 +337,16 @@ print("***************AFTER MERGE SORTING***********************")
 print("")
 # printPower(allCreatures)
 
+def get_noncreature_types(all_cards):
+    from tqdm import tqdm
+    # creature = allCreatures[0]
+    all_noncreature_types = set()
+    for noncreature in tqdm(allCards):
+        types = noncreature.subTyp.replace("'", "").split(" ")
+        for t in types:
+            all_noncreature_types.add(''.join(filter(str.isalnum, t)))
+
+    return all_noncreature_types
 
 def get_creature_types(all_creatures):
     from tqdm import tqdm
@@ -350,4 +360,8 @@ def get_creature_types(all_creatures):
         all_creature_types.remove(item)
 
     return all_creature_types
+
+creatureSubtypes = get_creature_types(allCreatures)
+allSubtypes = get_noncreature_types(allCards)
+print(allSubtypes - creatureSubtypes)
 
