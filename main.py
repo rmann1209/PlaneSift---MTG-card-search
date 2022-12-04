@@ -14,7 +14,7 @@ class Card:
         self.rarity = rarity
         self.url = url
 
-    def printCard(self):
+    def __str__(self):
         print(self.name + " | " + self.typ + " | P/T = " + str(self.power) + " " + str(self.tough))
     
 def printArray(array):
@@ -219,7 +219,7 @@ def mergeSort(cards, str):
 
 file = open("cardspipe.txt",encoding="utf-8");
 count = 0
-lineCount = 0;
+lineCount = 0
 cards = [] #Stores each variable needed to make a new card object, gets reset afterwards
 
 allCards = [] #this will hold every card, will NOT change throughout course of program (after reading in completes)
@@ -311,16 +311,32 @@ print("Size of Creature array: " + str(allCreatures.__len__()))
 
 #***************************************END OF FILE READ IN*******************************
 
-printArray(allCreatures)
-quickSort(allCreatures, 0, allCreatures.__len__()-1, "cmc")
+# printArray(allCreatures)
+import sys
+sys.setrecursionlimit(100000)
+print(sys.getrecursionlimit())
 
+
+print('s')
+quickSort(allCreatures, 0, allCreatures.__len__()-1, "cmc")
+print('q')
 print("")
 print("***************AFTER QUICK SORTING***********************")
 print("")
 printCMC(allCreatures)
+print('l')
 
+search_options = ["name", "cmc", "color", "typ", "supTyp", "subTyp", "rarity", "text", "power", "tough"]
 mergeSort(allCreatures, "power")
 print("")
 print("***************AFTER MERGE SORTING***********************")
 print("")
 printPower(allCreatures)
+
+
+
+creature = allCreatures[0]
+print(creature)
+
+
+
