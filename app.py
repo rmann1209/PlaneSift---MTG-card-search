@@ -1,43 +1,27 @@
 import pandas as pd
 import streamlit as st
-@st.cache
+from main import get_creature_types, read_in_cards
 
-def get_UN_data():
-    AWS_BUCKET_URL = "http://streamlit-demo-data.s3-us-west-2.amazonaws.com"
-    df = pd.read_csv(AWS_BUCKET_URL + "/agri.csv.gz")
-    return df.set_index("Region")
+ALL_CARDS, ALL_CREATURES = read_in_cards()
 
-try:
-    df = get_UN_data()
-    countries = st.multiselect(
-        "Choose countries", list(df.index), ["China", "United States of America"]
-    )
-    if not countries:
-        st.error("Please select at least one country.")
-    else:
-        data = df.loc[countries]
-        data /= 1000000.0
-        st.write("### Gross Agricultural Production ($B)", data.sort_index())
+st.header("Magic Card Sorter")
+st.subheader("")
 
-        data = data.T.reset_index()
-        data = pd.melt(data, id_vars=["index"]).rename(
-            columns={"index": "year", "value": "Gross Agricultural Product ($B)"}
-        )
-        chart = (
-            alt.Chart(data)
-            .mark_area(opacity=0.3)
-            .encode(
-                x="year:T",
-                y=alt.Y("Gross Agricultural Product ($B):Q", stack=None),
-                color="Region:N",
-            )
-        )
-        st.altair_chart(chart, use_container_width=True)
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
-    )
+keywords_tag = st.text_input("Please insert a comma separated list of keywords to search for", placeholder = r'Destroy, Flying,...')
+keywords_tag = [x.lower() for x in keywords_tag.replace(",", "").split(" ")] # Produces a lowercased list of keywords
+st.write(keywords_tag)
+name_tag = st.text_input("Card Name", placeholder =r'"Pacifism"')
+converted_mana_cost_tag  = st.slider('Select a Range for converted mana costs',   0, 16, (0, 5), 1)
+supertype_tag = st.multiselect("Choose Card Supertype", ["Basic", "Legendary", "Snow", "World"], ["World"])
+rarity_tag = st.multiselect("Choose Card Rarity", ["Common", "Uncommon", "Rare", "Mythic"], ["Rare"])
+
+card_type = st.select_slider("Card Types:", ["Creature", "Noncreature"])
+if card_type == "Creature":
+    subtypes_tag = st.multiselect("Choose Creature Types", get_creature_types(ALL_CREATURES), ["Human"])
+    power_tag  = st.slider('Select a Range for Power',   0, 16, (0, 5), 1)
+    toughness_tag  = st.slider('Select a Range for Toughness',   0, 16, (0, 5), 1)
+else:
+    print('etst')
+
+
+
