@@ -1,22 +1,4 @@
-import os
 
-class Card:
-    def __init__(self, name, cmc, color, typ, supTyp, subTyp, rarity, text, power, tough, url):
-        self.name = name
-        self.supTyp = supTyp
-        self.typ = typ
-        self.subTyp = subTyp
-        self.power = power
-        self.tough = tough
-        self.color = color
-        self.cmc = cmc
-        self.text = text
-        self.rarity = rarity
-        self.url = url
-
-    def __str__(self):
-        return self.name + " | " + self.typ + f" | Power: {str(self.power)} | Toughness: {str(self.tough)}"
-    
 def printArray(array):
     for i in array:
         print(i.name + " | " + i.typ + " | P/T = " + str(i.power) + " " + str(i.tough))
@@ -337,31 +319,6 @@ print("***************AFTER MERGE SORTING***********************")
 print("")
 # printPower(allCreatures)
 
-def get_noncreature_types(all_cards):
-    from tqdm import tqdm
-    # creature = allCreatures[0]
-    all_noncreature_types = set()
-    for noncreature in tqdm(allCards):
-        types = noncreature.subTyp.replace("'", "").split(" ")
-        for t in types:
-            all_noncreature_types.add(''.join(filter(str.isalnum, t)))
 
-    return all_noncreature_types
 
-def get_creature_types(all_creatures):
-    from tqdm import tqdm
-    # creature = allCreatures[0]
-    all_creature_types = set()
-    for creature in tqdm(allCreatures):
-        types = creature.subTyp.replace("'", "").split(" ")
-        for t in types:
-            all_creature_types.add(''.join(filter(str.isalnum, t)))
-    for item in ["", "Island", "of"]:
-        all_creature_types.remove(item)
-
-    return all_creature_types
-
-creatureSubtypes = get_creature_types(allCreatures)
-allSubtypes = get_noncreature_types(allCards)
-print(allSubtypes - creatureSubtypes)
 
