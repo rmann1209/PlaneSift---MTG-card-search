@@ -1,4 +1,3 @@
-
 from tqdm import tqdm
 import os
 
@@ -618,7 +617,8 @@ def search(unfiltered_cards, search_parameters):
     for parameter in search_parameters.keys():
         value = search_parameters[parameter]
         if len(unfiltered_cards) > 0:
-            print(len(unfiltered_cards))
+            # print(len(unfiltered_cards))
+            print(f"PARAMETER: {parameter}")
             match parameter:
                 case "keywords_tag": # * keyword search
                     if len(value) != 0:
@@ -652,7 +652,4 @@ def search(unfiltered_cards, search_parameters):
     print(len(unfiltered_cards))
     print("SEARCH RETURN CARDS")
     return unfiltered_cards
-            
-
-
-
+    
